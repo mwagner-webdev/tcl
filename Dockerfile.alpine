@@ -1,0 +1,39 @@
+FROM alpine AS builder
+LABEL org.opencontainers.image.authors="mbwagner@pm.me"
+
+RUN apk add --no-cache autoconf
+RUN apk add --no-cache gcc
+RUN apk add --no-cache musl-dev
+RUN apk add --no-cache make
+RUN apk add --no-cache bsd-compat-headers
+
+RUN addgroup -S build && adduser -S -G build build
+
+USER build
+
+COPY --chown=build:build . /home/build/
+
+RUN ls /home/build
+
+WORKDIR /home/build/unix
+
+RUN autoconf
+RUN ./configure
+RUN make
+
+RUN make test
+
+USER root
+
+RUN make install
+
+FROM alpine
+LABEL org.opencontainers.image.authors="mbwagner@pm.me"
+
+RUN addgroup -S tcl && adduser -S -G tcl tcl
+
+USER tcl
+
+COPY --chown=tcl:tcl --from=builder /usr/local /usr/local
+
+CMD ["/usr/local/bin/tclsh9.0"]
