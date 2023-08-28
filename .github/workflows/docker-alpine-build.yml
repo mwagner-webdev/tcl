@@ -22,6 +22,9 @@ jobs:
           touch tclStubInit.c tclOOStubInit.c tclOOScript.h
         working-directory: generic
 
+      - name: Get patch level
+        run: echo "TCL_PATCHLEVEL=$(cpp -dM generic/tcl.h | grep TCL_PATCH_LEVEL | awk -F'"' '/#define TCL_PATCH_LEVEL/ {print $2}')" >> $GITHUB_ENV
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
