@@ -32,6 +32,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: Dockerfile.alpine
           push: true
           tags: mbwagner/tcl:${{ env.TCL_PATCHLEVEL }}-alpine
       
@@ -39,6 +40,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: Dockerfile.alpine
           push: true
           tags: mbwagner/tcl:alpine
         if: github.ref == 'refs/heads/main'
