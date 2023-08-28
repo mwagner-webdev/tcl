@@ -11,7 +11,7 @@ on:
 permissions:
   contents: read
 jobs:
-  build-push:
+  build:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
