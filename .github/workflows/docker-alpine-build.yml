@@ -47,7 +47,7 @@ jobs:
           context: .
           file: Dockerfile.alpine
           push: true
-          tags: mbwagner/tcl:${GITHUB_REF##*/}-${{ github.sha }}-alpine
+          tags: mbwagner/tcl:${{ github.ref_name }}-${{ github.sha }}-alpine
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
         
       - name: Build and push to Docker Hub (bleeding edge tag)
