@@ -33,16 +33,14 @@ jobs:
         with:
           context: .
           push: true
-          tags: 
-            - mbwagner/tcl:${{ env.TCL_PATCHLEVEL }}-alpine
+          tags: mbwagner/tcl:${{ env.TCL_PATCHLEVEL }}-alpine
       
       - name: Build and push to Docker Hub (Alpine tag)
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: 
-            - mbwagner/tcl:alpine
+          tags: mbwagner/tcl:alpine
         if: github.ref == 'refs/heads/main'
         
 
