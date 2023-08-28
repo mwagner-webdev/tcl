@@ -45,6 +45,7 @@ jobs:
           file: Dockerfile.alpine
           push: true
           tags: mbwagner/tcl:${{ env.TCL_PATCHLEVEL }}-alpine
+          platforms: linux/amd64,linux/arm64,linux/arm,linux/mips64le
       
       - name: Build and push to Docker Hub (Git latest tag)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
@@ -54,6 +55,7 @@ jobs:
           file: Dockerfile.alpine
           push: true
           tags: mbwagner/tcl:${{ github.ref_name }}-${{ github.sha }}-alpine
+          platforms: linux/amd64,linux/arm64,linux/arm,linux/mips64le
         
       - name: Build and push to Docker Hub (bleeding edge tag)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
@@ -63,5 +65,6 @@ jobs:
           file: Dockerfile.alpine
           push: true
           tags: mbwagner/tcl:bleeding-edge-alpine
+          platforms: linux/amd64,linux/arm64,linux/arm,linux/mips64le
         
 
