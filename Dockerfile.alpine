@@ -36,4 +36,4 @@ USER tcl
 
 COPY --chown=tcl:tcl --from=builder /usr/local /usr/local
 
-CMD ["/usr/local/bin/tclsh9.0"]
+ENTRYPOINT ["/usr/local/bin/tclsh9.0"]
