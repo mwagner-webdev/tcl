@@ -39,14 +39,24 @@ jobs:
           file: Dockerfile.alpine
           push: true
           tags: mbwagner/tcl:${{ env.TCL_PATCHLEVEL }}-alpine
+          if: github.ref == 'core-8-branch' or github.ref == 'core-8-6-branch' or github.ref == 'core-9-branch' or github.ref == 'core-9-0-branch'
       
-      - name: Build and push to Docker Hub (Alpine tag)
+      - name: Build and push to Docker Hub (Git latest tag)
         uses: docker/build-push-action@v4
         with:
           context: .
           file: Dockerfile.alpine
           push: true
-          tags: mbwagner/tcl:alpine
-        if: github.ref == 'refs/heads/main'
+          tags: mbwagner/tcl:${{ github.head_ref }}.${{ github.sha }}-alpine
+        if: github.ref == 'refs/heads/main' or github.ref == 'refs/heads/docker-build'
+        
+      - name: Build and push to Docker Hub (bleeding edge tag)
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile.alpine
+          push: true
+          tags: mbwagner/tcl:bleeding-edge-alpine
+        if: github.ref == 'refs/heads/main' or github.ref == 'refs/heads/docker-build'
         
 
