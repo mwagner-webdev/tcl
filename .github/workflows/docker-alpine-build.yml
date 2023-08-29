@@ -28,8 +28,9 @@ jobs:
         working-directory: generic
 
       - name: Get version and patch level
-        run: echo "TCL_VERSION=$(cpp -dM generic/tcl.h | grep TCL_VERSION | awk -F'"' '/#define TCL_VERSION/ {print $2}')" >> $GITHUB_ENV
-        run: echo "TCL_PATCH_LEVEL=$(cpp -dM generic/tcl.h | grep TCL_PATCH_LEVEL | awk -F'"' '/#define TCL_PATCH_LEVEL/ {print $2}')" >> $GITHUB_ENV
+        run: |
+          echo "TCL_VERSION=$(cpp -dM generic/tcl.h | grep TCL_VERSION | awk -F'"' '/#define TCL_VERSION/ {print $2}')" >> $GITHUB_ENV
+          echo "TCL_PATCH_LEVEL=$(cpp -dM generic/tcl.h | grep TCL_PATCH_LEVEL | awk -F'"' '/#define TCL_PATCH_LEVEL/ {print $2}')" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
