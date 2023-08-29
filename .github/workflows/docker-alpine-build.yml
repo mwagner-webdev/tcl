@@ -11,14 +11,6 @@ on:
 permissions:
   contents: read
 
-anchors:
-  docker-params:
-    context: .
-    file: Dockerfile.alpine
-    push: true
-    platforms: linux/amd64,linux/arm64,linux/arm
-    build-args: TCL_VERSION=${{ env.TCL_VERSION }}
-
 jobs:
   build-push:
     runs-on: ubuntu-22.04
@@ -51,7 +43,11 @@ jobs:
         if: github.ref == 'core-8-branch' || github.ref == 'core-8-6-branch' || github.ref == 'core-9-branch' || github.ref == 'core-9-0-branch'
         uses: docker/build-push-action@v4
         with:
-          <<: *docker-params
+          context: .
+          file: Dockerfile.alpine
+          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm
+          build-args: TCL_VERSION=${{ env.TCL_VERSION }}
           tags: mbwagner/tcl:${{ env.TCL_PATCH_LEVEL }}-alpine
           
       
@@ -59,7 +55,11 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
         uses: docker/build-push-action@v4
         with:
-          <<: *docker-params
+          context: .
+          file: Dockerfile.alpine
+          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm
+          build-args: TCL_VERSION=${{ env.TCL_VERSION }}
           tags: mbwagner/tcl:${{ github.ref_name }}-${{ github.sha }}-alpine
           
         
@@ -67,7 +67,11 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
         uses: docker/build-push-action@v4
         with:
-          <<: *docker-params
+          context: .
+          file: Dockerfile.alpine
+          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm
+          build-args: TCL_VERSION=${{ env.TCL_VERSION }}
           tags: mbwagner/tcl:bleeding-edge-alpine
           
         
