@@ -29,6 +29,7 @@ RUN make install
 
 FROM alpine
 LABEL org.opencontainers.image.authors="mbwagner@pm.me"
+ARG TCL_VERSION
 
 RUN addgroup -S tcl && adduser -S -G tcl tcl
 
@@ -36,4 +37,4 @@ USER tcl
 
 COPY --chown=tcl:tcl --from=builder /usr/local /usr/local
 
-ENTRYPOINT ["/usr/local/bin/tclsh9.0"]
+ENTRYPOINT /usr/local/bin/tclsh$TCL_VERSION

@@ -10,6 +10,15 @@ on:
     - "core-**"
 permissions:
   contents: read
+
+anchors:
+  docker-params:
+    context: .
+    file: Dockerfile.alpine
+    push: true
+    platforms: linux/amd64,linux/arm64,linux/arm
+    build-args: TCL_VERSION=$(awk -F= '/^TCL_VERSION/ {print $$2; nextfile}' unix/configure.ac)
+
 jobs:
   build-push:
     runs-on: ubuntu-22.04
@@ -41,30 +50,24 @@ jobs:
         if: github.ref == 'core-8-branch' || github.ref == 'core-8-6-branch' || github.ref == 'core-9-branch' || github.ref == 'core-9-0-branch'
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: Dockerfile.alpine
-          push: true
+          <<: *docker-params
           tags: mbwagner/tcl:${{ env.TCL_PATCHLEVEL }}-alpine
-          platforms: linux/amd64,linux/arm64,linux/arm
+          
       
       - name: Build and push to Docker Hub (Git latest tag)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: Dockerfile.alpine
-          push: true
+          <<: *docker-params
           tags: mbwagner/tcl:${{ github.ref_name }}-${{ github.sha }}-alpine
-          platforms: linux/amd64,linux/arm64,linux/arm
+          
         
       - name: Build and push to Docker Hub (bleeding edge tag)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: Dockerfile.alpine
-          push: true
+          <<: *docker-params
           tags: mbwagner/tcl:bleeding-edge-alpine
-          platforms: linux/amd64,linux/arm64,linux/arm
+          
         
 
