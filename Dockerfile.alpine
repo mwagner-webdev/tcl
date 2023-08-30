@@ -18,7 +18,7 @@ RUN ls /home/build
 WORKDIR /home/build/unix
 
 RUN autoconf
-RUN ./configure
+RUN ./configure CFLAGS=-DTCL_UTF_MAX=3 CFLAGS=-DTCL_NO_DEPRECATED=1 --disable-shared --enable-symbols --enable-symbols=mem --enable-symbols=all
 RUN make
 
 RUN make test
