@@ -1,19 +1,14 @@
-FROM alpine AS builder
+FROM ubuntu:22.04 AS builder
 LABEL org.opencontainers.image.authors="mbwagner@pm.me"
 
-RUN apk add --no-cache autoconf
-RUN apk add --no-cache gcc
-RUN apk add --no-cache musl-dev
-RUN apk add --no-cache make
-RUN apk add --no-cache bsd-compat-headers
+RUN apt-get update
+RUN apt-get install -y autoconf automake gcc make
 
-RUN addgroup -S build && adduser -S -G build build
+RUN adduser build
 
 USER build
 
 COPY --chown=build:build . /home/build/
-
-RUN ls /home/build
 
 WORKDIR /home/build/unix
 
@@ -27,11 +22,11 @@ USER root
 
 RUN make install
 
-FROM alpine
+FROM ubuntu:22.04
 LABEL org.opencontainers.image.authors="mbwagner@pm.me"
 ARG TCL_VERSION
 
-RUN addgroup -S tcl && adduser -S -G tcl tcl
+RUN adduser tcl
 
 USER tcl
 
