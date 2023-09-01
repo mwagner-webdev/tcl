@@ -1,11 +1,7 @@
 FROM alpine AS builder
 LABEL org.opencontainers.image.authors="mbwagner@pm.me"
 
-RUN apk add --no-cache autoconf
-RUN apk add --no-cache gcc
-RUN apk add --no-cache musl-dev
-RUN apk add --no-cache make
-RUN apk add --no-cache bsd-compat-headers
+RUN apk add --no-cache autoconf gcc musl-dev make bsd-compat-headers
 
 RUN addgroup -S build && adduser -S -G build build
 
