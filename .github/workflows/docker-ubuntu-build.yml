@@ -1,4 +1,4 @@
-name: Docker Alpine
+name: Docker Ubuntu
 on:
   push:
     branches:
