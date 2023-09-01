@@ -1,4 +1,4 @@
-name: Docker Alpine
+name: Docker Ubuntu
 on:
   push:
     branches:
@@ -32,11 +32,6 @@ jobs:
           echo "TCL_VERSION=$(cpp -dM generic/tcl.h | grep TCL_VERSION | awk -F'"' '/#define TCL_VERSION/ {print $2}')" >> $GITHUB_ENV
           echo "TCL_PATCH_LEVEL=$(cpp -dM generic/tcl.h | grep TCL_PATCH_LEVEL | awk -F'"' '/#define TCL_PATCH_LEVEL/ {print $2}')" >> $GITHUB_ENV
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: 'arm64,arm'
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -47,10 +42,35 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64,linux/arm
+          platforms: linux/amd64
           build-args: TCL_VERSION=${{ env.TCL_VERSION }}
           tags: mbwagner/tcl:${{ env.TCL_PATCH_LEVEL }}
-          
+
+      - name: Build and push to Docker Hub (ARM64)
+        if: github.ref == 'core-8-branch' || github.ref == 'core-8-6-branch' || github.ref == 'core-9-branch' || github.ref == 'core-9-0-branch'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          platforms: linux/arm64
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
+            HOST=aarch64-linux-gnu
+          tags: mbwagner/tcl:${{ env.TCL_PATCH_LEVEL }}          
+
+      - name: Build and push to Docker Hub (ARMv7)
+        if: github.ref == 'core-8-branch' || github.ref == 'core-8-6-branch' || github.ref == 'core-9-branch' || github.ref == 'core-9-0-branch'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          platforms: linux/arm
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
+            HOST=arm-linux-gnueabi
+          tags: mbwagner/tcl:${{ env.TCL_PATCH_LEVEL }}      
       
       - name: Build and push to Docker Hub (Git latest tag)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
@@ -59,10 +79,36 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64,linux/arm
-          build-args: TCL_VERSION=${{ env.TCL_VERSION }}
+          platforms: linux/amd64
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
           tags: mbwagner/tcl:${{ github.ref_name }}-${{ github.sha }}
-          
+
+      - name: Build and push to Docker Hub (Git latest tag) (ARM64)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          platforms: linux/arm64
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
+            HOST=aarch64-linux-gnu
+          tags: mbwagner/tcl:${{ github.ref_name }}-${{ github.sha }}       
+
+      - name: Build and push to Docker Hub (Git latest tag) (ARMv7)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          platforms: linux/arm
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
+            HOST=arm-linux-gnueabi
+          tags: mbwagner/tcl:${{ github.ref_name }}-${{ github.sha }}   
         
       - name: Build and push to Docker Hub (bleeding edge tag)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
@@ -71,8 +117,35 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64,linux/arm
-          build-args: TCL_VERSION=${{ env.TCL_VERSION }}
+          platforms: linux/amd64
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
+          tags: mbwagner/tcl:bleeding-edge
+
+      - name: Build and push to Docker Hub (bleeding edge tag) (ARM64)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          platforms: linux/arm64
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
+            HOST=aarch64-linux-gnu
+          tags: mbwagner/tcl:bleeding-edge
+
+      - name: Build and push to Docker Hub (bleeding edge tag) (ARMv7)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docker-build'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          platforms: linux/arm
+          build-args: |
+            TCL_VERSION=${{ env.TCL_VERSION }}
+            HOST=arm-linux-gnueabi
           tags: mbwagner/tcl:bleeding-edge
           
         
