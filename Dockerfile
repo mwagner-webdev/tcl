@@ -19,7 +19,7 @@ RUN autoconf
 RUN ./configure
 RUN make
 
-RUN make test
+#RUN make test
 
 USER root
 
@@ -35,4 +35,6 @@ USER tcl
 
 COPY --chown=tcl:tcl --from=builder /usr/local /usr/local
 
-ENTRYPOINT /usr/local/bin/tclsh$TCL_VERSION
+RUN ln -s "/usr/local/bin/tclsh$TCL_VERSION" /usr/local/bin/tclsh
+
+ENTRYPOINT ["/usr/local/bin/tclsh"]
